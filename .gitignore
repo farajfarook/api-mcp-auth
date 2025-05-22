@@ -23,6 +23,7 @@ ScaffoldingReadMe.txt
 *.user
 *.userosscache
 *.sln.docstates
+.idea/
 
 # Logs
 *.log
