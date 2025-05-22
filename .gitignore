@@ -1,0 +1,43 @@
+# .gitignore for ASP.NET Core / C# project
+# Build results
+bin/
+obj/
+
+# Rider/JetBrains project files
+.idea/
+*.sln.iml
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# HTTP Client requests
+*.http
+
+# Local configuration
+appsettings.*.local.json
+
+# Rider HTTP Client
+httpRequests/
+
+.idea/
