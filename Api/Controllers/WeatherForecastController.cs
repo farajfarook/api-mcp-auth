@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelContextProtocol.Server;
 
@@ -7,6 +8,7 @@ namespace Api.Controllers
     [ApiController]
     [Route("[controller]")]
     [McpServerToolType]
+    [Authorize(Policy = "ApiScope")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

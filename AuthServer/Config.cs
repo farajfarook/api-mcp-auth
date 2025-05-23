@@ -40,9 +40,15 @@ public static class Config
 
                 AllowedGrantTypes = GrantTypes.Code,
 
-                RedirectUris = { "https://localhost:8000/signin-oidc" },
+                RedirectUris = {
+                    "https://localhost:8000/signin-oidc",
+                    "http://localhost:5173/signin-oidc"
+                },
                 FrontChannelLogoutUri = "https://localhost:8000/signout-oidc",
-                PostLogoutRedirectUris = { "https://localhost:8000/signout-callback-oidc" },
+                PostLogoutRedirectUris = {
+                    "https://localhost:8000/signout-callback-oidc",
+                    "http://localhost:5173/signout-callback-oidc"
+                },
 
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "api" }
