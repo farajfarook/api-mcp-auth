@@ -1,34 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+import { fetchWeatherForecast, type WeatherForecast } from './weather.service'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [weather, setWeather] = useState<WeatherForecast[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchWeatherForecast()
+      .then(setWeather)
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{ padding: '2em', fontFamily: 'sans-serif' }}>
+      <h1>Weather Forecast Demo</h1>
+      {loading && <p>Loading...</p>}
+      {error && <p style={{color: 'red'}}>Error: {error}</p>}
+      {weather && (
+        <table style={{margin: '1em 0', borderCollapse: 'collapse', width: '100%'}}>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Temp (°C)</th>
+              <th>Temp (°F)</th>
+              <th>Summary</th>
+            </tr>
+          </thead>
+          <tbody>
+            {weather.map((w, i) => (
+              <tr key={i}>
+                <td>{w.date}</td>
+                <td>{w.temperatureC}</td>
+                <td>{w.temperatureF}</td>
+                <td>{w.summary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
   )
 }
 
