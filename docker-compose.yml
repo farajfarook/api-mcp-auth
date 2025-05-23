@@ -19,7 +19,7 @@ services:
       - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:5001 # Changed from https to http
+      - ASPNETCORE_URLS=https://+:5001
 
   spa:
     build:
