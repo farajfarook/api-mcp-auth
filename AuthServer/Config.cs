@@ -17,6 +17,15 @@ public static class Config
             new ApiScope("api"),
         };
 
+    public static IEnumerable<ApiResource> ApiResources =>
+        new ApiResource[]
+        {
+            new ApiResource("api", "My API")
+            {
+                Scopes = { "api" }
+            }
+        };
+
     public static IEnumerable<Client> Clients =>
         new Client[]
         {
