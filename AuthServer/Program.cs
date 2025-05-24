@@ -19,7 +19,12 @@ try
     var app = builder
         .ConfigureServices()
         .ConfigurePipeline();
-    
+
+    app.UseCookiePolicy(new CookiePolicyOptions
+    {
+        MinimumSameSitePolicy = SameSiteMode.Lax
+    });
+
     app.Run();
 }
 catch (Exception ex)
