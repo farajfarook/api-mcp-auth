@@ -1,7 +1,7 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 
 const oidcConfig = {
-  authority: 'https://localhost:5001', // AuthServer URL
+  authority: 'http://localhost:5001', // AuthServer URL (HTTP)
   client_id: 'interactive',
   redirect_uri: 'http://localhost:5173/signin-oidc',
   post_logout_redirect_uri: 'http://localhost:5173/signout-callback-oidc',

@@ -23,5 +23,4 @@ RUN dotnet publish "AuthServer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY ["AuthServer/localhost.pfx", "/https/localhost.pfx"]
 ENTRYPOINT ["dotnet", "AuthServer.dll"]
