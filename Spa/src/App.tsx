@@ -30,6 +30,11 @@ function App() {
     return <button onClick={login}>Login</button>;
   }
 
+  // Print JWT to console after authentication
+  if (user && user.access_token) {
+    console.log('JWT:', user.access_token);
+  }
+
   return (
     <div style={{ padding: '2em', fontFamily: 'sans-serif' }}>
       <button onClick={logout} style={{ float: 'right' }}>Logout</button>
