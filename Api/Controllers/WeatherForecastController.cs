@@ -8,7 +8,6 @@ namespace Api.Controllers
     [ApiController]
     [Route("[controller]")]
     [McpServerToolType]
-    [Authorize]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -17,6 +16,7 @@ namespace Api.Controllers
         };
 
         [HttpGet]
+        [Authorize(policy: "ApiScope")]
         [McpServerTool(Name = "GetWeather"), Description("Echoes the message back to the client.")]
         public IEnumerable<WeatherForecast> Get()
         {
