@@ -28,14 +28,14 @@ namespace Api
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:5001"; // AuthServer URL
+                    options.Authority = "http://localhost:5001"; // AuthServer URL
                     options.Audience = "api"; // Must match ApiScope name
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = true,
                         ValidAudience = "api"
                     };
-                    options.RequireHttpsMetadata = true;
+                    options.RequireHttpsMetadata = false;
                 });
 
             services.AddAuthorization(options =>
@@ -44,6 +44,16 @@ namespace Api
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", "api");
+                });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
                 });
             });
         }
@@ -56,8 +66,8 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(); // Enable CORS globally
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
