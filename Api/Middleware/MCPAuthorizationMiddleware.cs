@@ -17,27 +17,29 @@ namespace Api.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
+            var path = context.Request.Path;
+            if (path == "/sse" && context.User.Identity?.IsAuthenticated != true && false)
             {
-                _logger.LogInformation($"User {context.User.Identity.Name} is authenticated. Applying custom authorization logic.");
-
-                // Example: Deny access if a specific condition is not met
-                // if (!context.User.HasClaim(c => c.Type == "custom_claim" && c.Value == "required_value"))
-                // {
-                //     _logger.LogWarning($"User {context.User.Identity.Name} failed custom authorization.");
-                //     context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                //     await context.Response.WriteAsync("Forbidden by custom authorization policy.");
-                //     return; // Short-circuit the pipeline
-                // }
-
-                _logger.LogInformation($"User {context.User.Identity.Name} passed custom authorization.");
+                _logger.LogWarning("Unauthorized access attempt to SSE endpoint without authentication.");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                var errorResponse = new { error = "invalid_token", error_description = "Missing or invalid access token" };
+                await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(errorResponse));
+                return; // Stop further processing in the pipeline
             }
-            else
+            else if (path == "/message")
             {
-                _logger.LogInformation("No authenticated user. Skipping custom authorization logic.");
+                // get the json body and log it
+                context.Request.EnableBuffering(); // Enable buffering to read the request body multiple times
+                using (var reader = new System.IO.StreamReader(context.Request.Body, leaveOpen: true)) // Keep the stream open
+                {
+                    var body = await reader.ReadToEndAsync();
+                    _logger.LogInformation("Message endpoint accessed with body: {Body}", body);
+                    context.Request.Body.Position = 0; // Reset the stream position for further processing
+                }
             }
 
-            await _next(context);
+            await _next(context); // Call the next middleware in the pipeline
         }
     }
 }
