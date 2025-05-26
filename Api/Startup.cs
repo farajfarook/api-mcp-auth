@@ -17,9 +17,6 @@ namespace Api
         {
             services.AddControllers();
             services.AddEndpointsApiExplorer();
-            services.AddMcpServer()
-                .WithHttpTransport()
-                .WithToolsFromAssembly();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api API", Version = "v1" });
@@ -53,12 +50,16 @@ namespace Api
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ApiScope", policy =>
+                options.AddPolicy("WeatherGet", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "api");
+                    policy.RequireClaim("scope", "weatherget");
                 });
             });
+            
+            services.AddMcpServer()
+                .WithHttpTransport()
+                .WithToolsFromAssembly();
 
             services.AddCors(options =>
             {

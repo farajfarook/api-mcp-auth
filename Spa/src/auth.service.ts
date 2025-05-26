@@ -6,7 +6,7 @@ const oidcConfig = {
   redirect_uri: 'http://localhost:5173/signin-oidc',
   post_logout_redirect_uri: 'http://localhost:5173/signout-callback-oidc',
   response_type: 'code',
-  scope: 'openid profile api',
+  scope: 'openid profile api weatherget',
   userStore: new WebStorageStateStore({ store: window.localStorage }),
 };
 

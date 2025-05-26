@@ -17,7 +17,7 @@ namespace Api.Controllers
         };
 
         [HttpGet]
-        [Authorize(policy: "ApiScope")]
+        [Authorize(policy: "WeatherGet")]
         [McpServerTool(Name = "GetWeather"), Description("Echoes the message back to the client.")]
         public IEnumerable<WeatherForecast> Get()
         {

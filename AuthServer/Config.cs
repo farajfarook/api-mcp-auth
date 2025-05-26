@@ -14,7 +14,8 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("api"),
+            new ApiScope("api", "My API"),
+            new ApiScope("weatherget", "Get weather data")
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
@@ -22,7 +23,7 @@ public static class Config
         {
             new ApiResource("api", "My API")
             {
-                Scopes = { "api" }
+                Scopes = { "api", "weatherget" }
             }
         };
 
@@ -58,7 +59,7 @@ public static class Config
                 },
 
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "api" }
+                AllowedScopes = { "openid", "profile", "api" , "weatherget" }
             },
         };
 }
