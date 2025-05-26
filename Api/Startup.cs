@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Api.Middleware; // Add this using statement
 
 namespace Api
 {
@@ -56,7 +57,7 @@ namespace Api
                     policy.RequireClaim("scope", "weatherget");
                 });
             });
-            
+
             services.AddMcpServer()
                 .WithHttpTransport()
                 .WithToolsFromAssembly();
@@ -76,14 +77,20 @@ namespace Api
         {
             if (env.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
-            app.UseCors(); // Enable CORS globally
-            app.UseAuthentication();
-            app.UseAuthorization();
+
+            app.UseAuthentication(); // Default authentication middleware
+            app.UseAuthorization();  // Default authorization middleware
+
+            app.UseMCPAuthorization(); // Your custom authorization middleware, now renamed
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapMcp();
