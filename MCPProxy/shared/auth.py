@@ -2,8 +2,13 @@ from jwt.algorithms import RSAAlgorithm
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 
+
 import logging
 import httpx
+
+from shared.setup import setup_logging
+
+setup_logging()
 
 logger = logging.getLogger(__name__)
 

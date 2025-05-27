@@ -42,17 +42,6 @@ public static class Config
                 AllowedScopes = { "api" }
             },
 
-            new Client
-            {
-                ClientId = "m2m.client",
-                ClientName = "Client Credentials Client",
-
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-
-                AllowedScopes = { "api" }
-            },
-
             // interactive client using code flow + pkce
             new Client
             {
@@ -69,6 +58,20 @@ public static class Config
                     "http://localhost:5173/signout-callback-oidc"
                 },
 
+                AllowOfflineAccess = true,
+                AllowedScopes = { "openid", "profile", "api" , "weatherget" }
+            },
+
+            new Client
+            {
+                ClientId = "mcpclient",
+                ClientSecrets = { new Secret("mcpclient_secret".Sha256()) },
+
+                AllowedGrantTypes = GrantTypes.Code,
+
+                RedirectUris = {
+                    "http://localhost:3334/oauth/callback"
+                },
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "api" , "weatherget" }
             },

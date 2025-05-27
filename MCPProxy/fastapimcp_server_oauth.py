@@ -1,21 +1,25 @@
+import logging
 from typing import Any
-from fastapi import Depends, FastAPI, HTTPException, Request, logger, status
-from fastapi.security import HTTPBearer
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi_mcp import FastApiMCP, AuthConfig
 
 from shared.auth import fetch_jwks_public_key
+from shared.setup import setup_logging
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 settings = {
-    "issuer": "https://faraj.au.auth0.com/",
-    "audience": "https://faraj.au.auth0.com/api/v2/",
-    "client_id": "venShbBAXcQp6xHXUgzyNbGsGKVvxM77",
-    "client_secret": "roLaurtHEn2LEECxU3nr4ZBd5L3WI2RA5jQ_QjFwua3lAkl6nK5eZOZMFqu83_o9",
+    "issuer": "http://localhost:5001/",
+    "audience": "http://localhost:5001/",
+    "client_id": "mcpclient",
+    "client_secret": "mcpclient_secret",
 }
 
 
 async def lifespan(app: FastAPI):
     app.state.jwks_public_key = await fetch_jwks_public_key(
-        f"{settings['issuer']}.well-known/jwks.json"
+        f"{settings['issuer']}.well-known/openid-configuration/jwks"
     )
     yield
 
@@ -90,7 +94,7 @@ mcp = FastApiMCP(
     name="MCP With OAuth",
     auth_config=AuthConfig(
         issuer=settings["issuer"],
-        authorize_url=f"{settings['issuer']}/authorize",
+        authorize_url=f"{settings['issuer']}authorize",
         oauth_metadata_url=f"{settings['issuer']}.well-known/openid-configuration",
         audience=settings["audience"],
         client_id=settings["client_id"],
@@ -106,4 +110,4 @@ mcp.mount()
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, port=8001)
+    uvicorn.run(app, port=8005)
