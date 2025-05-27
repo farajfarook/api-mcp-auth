@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Any
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi_mcp import FastApiMCP, AuthConfig
@@ -16,10 +17,12 @@ settings = {
     "client_secret": "mcpclient_secret",
 }
 
+issuer_url = os.getenv("ISSUER_URL", settings["issuer"])
+
 
 async def lifespan(app: FastAPI):
     app.state.jwks_public_key = await fetch_jwks_public_key(
-        f"{settings['issuer']}/.well-known/openid-configuration/jwks"
+        f"{issuer_url}/.well-known/openid-configuration/jwks"
     )
     yield
 
@@ -96,8 +99,8 @@ mcp = FastApiMCP(
     name="MCP With OAuth",
     auth_config=AuthConfig(
         issuer=settings["issuer"],
-        authorize_url=f"{settings['issuer']}/connect/authorize",
-        oauth_metadata_url=f"{settings['issuer']}/.well-known/openid-configuration",
+        authorize_url=f"{issuer_url}/connect/authorize",
+        oauth_metadata_url=f"{issuer_url}/.well-known/openid-configuration",
         audience=settings["audience"],
         client_id=settings["client_id"],
         client_secret=settings["client_secret"],

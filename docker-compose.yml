@@ -38,5 +38,6 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
+      - ISSUER_URL=http://authserver:5001
     depends_on:
       - authserver

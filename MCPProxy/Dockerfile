@@ -22,7 +22,7 @@ COPY MCPProxy/uv.lock* ./
 RUN pip install uv
 
 # Install Python dependencies using uv sync for reproducible builds
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen
 
 # Copy the application code
 COPY MCPProxy/shared/ ./shared/
@@ -40,4 +40,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8009/api/public')" || exit 1
 
 # Command to run the application
-CMD ["python", "-m", "uvicorn", "fastapimcp_server_oauth:app", "--host", "0.0.0.0", "--port", "8009"]
+CMD ["uv", "run", "uvicorn", "fastapimcp_server_oauth:app", "--host", "0.0.0.0", "--port", "8009"]
