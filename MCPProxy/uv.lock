@@ -34,7 +34,9 @@ dependencies = [
     { name = "fastapi" },
     { name = "fastapi-mcp" },
     { name = "fastmcp" },
+    { name = "httpx" },
     { name = "pyjwt" },
+    { name = "uvicorn" },
 ]
 
 [package.metadata]
@@ -43,7 +45,9 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115.12" },
     { name = "fastapi-mcp", specifier = ">=0.3.4" },
     { name = "fastmcp", specifier = ">=2.5.1" },
+    { name = "httpx", specifier = ">=0.28.1" },
     { name = "pyjwt", specifier = ">=2.10.1" },
+    { name = "uvicorn", specifier = ">=0.32.1" },
 ]
 
 [[package]]
