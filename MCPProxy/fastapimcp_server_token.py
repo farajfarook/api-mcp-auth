@@ -1,10 +1,24 @@
-from fastapi import Depends, FastAPI
-from fastapi.security import HTTPBearer
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi_mcp import AuthConfig, FastApiMCP
-from fastapi_verify_token import verify_token, security
 
 # Create FastAPI instance
 app = FastAPI(title="Hello World API", version="1.0.0")
+
+VALID_TOKEN = "secret123"  # Replace with your actual token
+
+security = HTTPBearer()
+
+
+async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Verify the bearer token"""
+    if credentials.credentials != VALID_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return credentials.credentials
 
 
 @app.get("/", operation_id="read_root")
