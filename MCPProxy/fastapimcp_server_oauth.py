@@ -109,6 +109,14 @@ async def protected(
     return {"message": f"Hello, {user_id}!", "user_id": user_id, "scope": scope}
 
 
+@app.get("/api/get_weather", operation_id="get_weather")
+async def get_weather():
+    """
+    This endpoint is protected and requires the 'weatherget' scope.
+    """
+    return {"message": "Weather data"}
+
+
 mcp = FastApiMCP(
     app,
     name="MCP With OAuth",
