@@ -20,6 +20,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
+
   spa:
     build:
       context: .
@@ -28,16 +29,15 @@ services:
       - "8000:80"
     depends_on:
       - api
-
-  mcpproxy:
-    build:
-      context: .
-      dockerfile: MCPProxy/Dockerfile
-    ports:
-      - "8009:8009"
-    environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONDONTWRITEBYTECODE=1
-      - ISSUER_URL=http://authserver:5001
-    depends_on:
-      - authserver
+#  mcpproxy:
+#    build:
+#      context: .
+#      dockerfile: MCPProxy/Dockerfile
+#    ports:
+#      - "8009:8009"
+#    environment:
+#      - PYTHONUNBUFFERED=1
+#      - PYTHONDONTWRITEBYTECODE=1
+#      - ISSUER_URL=http://authserver:5001
+#    depends_on:
+#      - authserver
