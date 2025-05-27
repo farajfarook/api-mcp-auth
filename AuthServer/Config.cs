@@ -42,6 +42,17 @@ public static class Config
                 AllowedScopes = { "api" }
             },
 
+            new Client
+            {
+                ClientId = "m2m.client",
+                ClientName = "Client Credentials Client",
+
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+
+                AllowedScopes = { "api" }
+            },
+
             // interactive client using code flow + pkce
             new Client
             {
