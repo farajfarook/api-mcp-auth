@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy project configuration files
-COPY pyproject.toml .
-COPY uv.lock* ./
+COPY MCPProxy/pyproject.toml .
+COPY MCPProxy/uv.lock* ./
 
 # Install uv for faster package management
 RUN pip install uv
@@ -25,8 +25,8 @@ RUN pip install uv
 RUN uv sync --frozen --no-dev
 
 # Copy the application code
-COPY shared/ ./shared/
-COPY fastapimcp_server_oauth.py .
+COPY MCPProxy/shared/ ./shared/
+COPY MCPProxy/fastapimcp_server_oauth.py .
 
 # Create a non-root user for security
 RUN useradd --create-home --shell /bin/bash app && chown -R app:app /app
