@@ -52,7 +52,8 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
 
                 RedirectUris = {
-                    "http://localhost:5173/signin-oidc"
+                    "http://localhost:5173/signin-oidc",
+                    "http://localhost:3334/oauth/callback"
                 },
                 FrontChannelLogoutUri = "http://localhost:5173/signout-oidc",
                 PostLogoutRedirectUris = {
@@ -60,21 +61,21 @@ public static class Config
                 },
 
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "api" , "weatherget" }
-            },
-
-            new Client
-            {
-                ClientId = "mcpclient",
-                ClientSecrets = { new Secret("mcpclient_secret".Sha256()) },
-
-                AllowedGrantTypes = GrantTypes.Code,
-
-                RedirectUris = {
-                    "http://localhost:3334/oauth/callback"
-                },
-                AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "email", "api" , "weatherget" }
             },
+
+//            new Client
+//            {
+//                ClientId = "mcpclient",
+//                ClientSecrets = { new Secret("mcpclient_secret".Sha256()) },
+//
+//                AllowedGrantTypes = GrantTypes.Code,
+//
+//                RedirectUris = {
+//                    "http://localhost:3334/oauth/callback"
+//                },
+//                AllowOfflineAccess = true,
+//                AllowedScopes = { "openid", "profile", "email", "api" , "weatherget" }
+//            },
         };
 }

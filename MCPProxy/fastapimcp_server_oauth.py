@@ -13,8 +13,9 @@ logger = logging.getLogger(__name__)
 settings = {
     "issuer": "http://localhost:5001",
     "audience": "http://localhost:5001/resources",
-    "client_id": "mcpclient",
-    "client_secret": "mcpclient_secret",
+    "client_id": "interactive",
+    "client_secret": "interactive_secret",
+    "scope": "openid profile email api weatherget",
 }
 
 issuer_url = os.getenv("ISSUER_URL", settings["issuer"])
@@ -84,14 +85,28 @@ async def get_current_user_id(claims: dict = Depends(verify_auth)) -> str:
     return user_id
 
 
+async def get_scope(claims: dict = Depends(verify_auth)) -> str:
+    scope = claims.get("scope")
+
+    if not scope:
+        logger.error("No scope found in token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized"
+        )
+
+    return scope
+
+
 @app.get("/api/public", operation_id="public")
 async def public():
     return {"message": "This is a public route"}
 
 
 @app.get("/api/protected", operation_id="protected")
-async def protected(user_id: str = Depends(get_current_user_id)):
-    return {"message": f"Hello, {user_id}!", "user_id": user_id}
+async def protected(
+    user_id: str = Depends(get_current_user_id), scope: str = Depends(get_scope)
+):
+    return {"message": f"Hello, {user_id}!", "user_id": user_id, "scope": scope}
 
 
 mcp = FastApiMCP(
@@ -104,7 +119,7 @@ mcp = FastApiMCP(
         audience=settings["audience"],
         client_id=settings["client_id"],
         client_secret=settings["client_secret"],
-        default_scope="openid profile email",
+        default_scope=settings["scope"],
         dependencies=[Depends(verify_auth)],
         setup_proxies=True,
     ),
@@ -116,4 +131,4 @@ mcp.mount()
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, port=8009)
+    uvicorn.run(app, port=8010)
