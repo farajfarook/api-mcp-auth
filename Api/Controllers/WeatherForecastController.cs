@@ -7,7 +7,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [McpServerToolType]
+    //[McpServerToolType]
     [Authorize]
     public class WeatherForecastController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize(policy: "WeatherGet")]
-        [McpServerTool(Name = "WeatherForecast_Get"), Authorize("WeatherGet"), Description("Echoes the message back to the client.")]
+        //[McpServerTool(Name = "WeatherForecast_Get"), Authorize("WeatherGet"), Description("Echoes the message back to the client.")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index =>

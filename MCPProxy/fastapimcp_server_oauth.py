@@ -16,6 +16,7 @@ settings = {
     "client_id": "interactive",
     "client_secret": "interactive_secret",
     "scope": "openid profile email api weatherget",
+    "api_base_url": "http://localhost:5000",
 }
 
 issuer_url = os.getenv("ISSUER_URL", settings["issuer"])
@@ -133,12 +134,65 @@ async def protected(
     return {"message": f"Hello, {user_id}!", "user_id": user_id, "scope": scope}
 
 
-@app.get("/api/get_weather", operation_id="get_weather")
-async def get_weather(token: str = Depends(get_token)):
-    """
-    This endpoint is protected and requires the 'weatherget' scope.
-    """
-    return {"message": "Weather data"}
+@app.get("/api/sample", operation_id="sample")
+async def sample_weather(token: str = Depends(get_token)):
+    import httpx
+
+    # API service URL - adjust if running in different environment
+    api_base_url = os.getenv("API_BASE_URL", settings["api_base_url"])
+
+    try:
+        async with httpx.AsyncClient() as client:
+            # Forward the request to the API service with the authorization token
+            response = await client.get(
+                f"{api_base_url}/WeatherForecast",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json",
+                },
+                timeout=30.0,
+            )
+
+            # Check if the API call was successful
+            if response.status_code == 200:
+                # Return the weather data from the API
+                weather_data = response.json()
+                return {
+                    "message": "Weather data retrieved successfully",
+                    "data": weather_data,
+                }
+            elif response.status_code == 401:
+                logger.error("API returned 401 Unauthorized")
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Unauthorized to access weather data",
+                )
+            elif response.status_code == 403:
+                logger.error("API returned 403 Forbidden")
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Insufficient permissions to access weather data",
+                )
+            else:
+                logger.error(f"API returned status code: {response.status_code}")
+                logger.error(f"API response: {response.text}")
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail="Failed to retrieve weather data from API",
+                )
+
+    except httpx.TimeoutException:
+        logger.error("Timeout while calling API service")
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="Timeout while retrieving weather data",
+        )
+    except httpx.RequestError as e:
+        logger.error(f"Request error while calling API service: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Error connecting to API service",
+        )
 
 
 mcp = FastApiMCP(

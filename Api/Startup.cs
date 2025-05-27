@@ -58,9 +58,9 @@ namespace Api
                 });
             });
 
-            services.AddMcpServer()
-                .WithHttpTransport()
-                .WithToolsFromAssembly();
+            //services.AddMcpServer()
+            //    .WithHttpTransport()
+            //    .WithToolsFromAssembly();
 
             services.AddCors(options =>
             {
@@ -89,11 +89,11 @@ namespace Api
             app.UseAuthentication(); // Default authentication middleware
             app.UseAuthorization();  // Default authorization middleware
 
-            app.UseMCPAuthorization(); // Your custom authorization middleware, now renamed
+            //app.UseMCPAuthorization(); // Your custom authorization middleware, now renamed
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapMcp();
+            //    endpoints.MapMcp();
                 endpoints.MapControllers();
             });
         }
