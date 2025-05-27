@@ -10,8 +10,8 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 settings = {
-    "issuer": "http://localhost:5001/",
-    "audience": "http://localhost:5001/",
+    "issuer": "http://localhost:5001",
+    "audience": "http://localhost:5001/resources",
     "client_id": "mcpclient",
     "client_secret": "mcpclient_secret",
 }
@@ -19,7 +19,7 @@ settings = {
 
 async def lifespan(app: FastAPI):
     app.state.jwks_public_key = await fetch_jwks_public_key(
-        f"{settings['issuer']}.well-known/openid-configuration/jwks"
+        f"{settings['issuer']}/.well-known/openid-configuration/jwks"
     )
     yield
 
@@ -63,6 +63,8 @@ async def verify_auth(request: Request) -> dict[str, Any]:
 
     except Exception as e:
         logger.error(f"Auth error: {str(e)}")
+        logger.error(f"Request URL: {request.url}")
+        logger.error(f"Request headers: {dict(request.headers)}")
 
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
@@ -94,11 +96,12 @@ mcp = FastApiMCP(
     name="MCP With OAuth",
     auth_config=AuthConfig(
         issuer=settings["issuer"],
-        authorize_url=f"{settings['issuer']}authorize",
-        oauth_metadata_url=f"{settings['issuer']}.well-known/openid-configuration",
+        authorize_url=f"{settings['issuer']}/connect/authorize",
+        oauth_metadata_url=f"{settings['issuer']}/.well-known/openid-configuration",
         audience=settings["audience"],
         client_id=settings["client_id"],
         client_secret=settings["client_secret"],
+        default_scope="openid profile email",
         dependencies=[Depends(verify_auth)],
         setup_proxies=True,
     ),
@@ -110,4 +113,4 @@ mcp.mount()
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, port=8005)
+    uvicorn.run(app, port=8009)

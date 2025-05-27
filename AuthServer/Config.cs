@@ -9,6 +9,7 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResources.Email()
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -73,7 +74,7 @@ public static class Config
                     "http://localhost:3334/oauth/callback"
                 },
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "api" , "weatherget" }
+                AllowedScopes = { "openid", "profile", "email", "api" , "weatherget" }
             },
         };
 }
